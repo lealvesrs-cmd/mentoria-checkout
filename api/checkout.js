@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  const { name, email, cpfCnpj, phone, cep, billingType, creditCard, creditCardHolderInfo, installmentCount } = req.body;
+  const { name, email, cpfCnpj, phone, cep, address, addressNumber, neighborhood, billingType, creditCard, creditCardHolderInfo, installmentCount } = req.body;
 
   // Validação básica
   if (!name || !email || !cpfCnpj || !billingType) {
@@ -31,7 +31,12 @@ export default async function handler(req, res) {
 
   try {
     // 1. Cria ou recupera cliente no Asaas
-    const customer = await asaasPost('/customers', { name, email, cpfCnpj, mobilePhone: phone, postalCode: cep });
+    const customer = await asaasPost('/customers', {
+      name, email, cpfCnpj,
+      mobilePhone: phone,
+      postalCode: cep,
+      address, addressNumber, neighborhood
+    });
     if (customer.errors) {
       return res.status(422).json({ error: customer.errors[0]?.description || 'Erro ao criar cliente' });
     }
@@ -48,7 +53,12 @@ export default async function handler(req, res) {
     // Dados extras para cartão de crédito
     if (billingType === 'CREDIT_CARD') {
       chargePayload.creditCard = creditCard;
-      chargePayload.creditCardHolderInfo = { ...creditCardHolderInfo, phone, mobilePhone: phone, postalCode: cep };
+      chargePayload.creditCardHolderInfo = {
+        ...creditCardHolderInfo,
+        phone, mobilePhone: phone,
+        postalCode: cep,
+        address, addressNumber, neighborhood
+      };
       if (installmentCount && installmentCount > 1) {
         chargePayload.installmentCount = installmentCount;
         chargePayload.installmentValue = parseFloat((997.00 / installmentCount).toFixed(2));
