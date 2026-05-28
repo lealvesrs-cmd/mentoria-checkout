@@ -490,6 +490,10 @@
           <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" inputmode="numeric" />
         </div>
       </div>
+      <div class="field">
+        <label>Telefone (com DDD)</label>
+        <input type="text" id="phone" placeholder="(00) 00000-0000" maxlength="15" inputmode="numeric" autocomplete="tel" />
+      </div>
 
       <div class="divider-line"></div>
 
@@ -646,6 +650,12 @@ document.getElementById('cpf').addEventListener('input', function () {
   v = v.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
   this.value = v;
 });
+document.getElementById('phone').addEventListener('input', function () {
+  let v = this.value.replace(/\D/g, '');
+  if (v.length <= 10) v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+  else v = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+  this.value = v.trim().replace(/-$/, '');
+});
 document.getElementById('card-number').addEventListener('input', function () {
   this.value = this.value.replace(/\D/g, '').replace(/(\d{4})/g, '$1 ').trim().slice(0, 19);
 });
@@ -681,15 +691,17 @@ function getCustomer() {
   return {
     name:    document.getElementById('name').value.trim(),
     email:   document.getElementById('email').value.trim(),
-    cpfCnpj: document.getElementById('cpf').value.replace(/\D/g, '')
+    cpfCnpj: document.getElementById('cpf').value.replace(/\D/g, ''),
+    phone:   document.getElementById('phone').value.replace(/\D/g, '')
   };
 }
 
 function validate() {
-  const { name, email, cpfCnpj } = getCustomer();
+  const { name, email, cpfCnpj, phone } = getCustomer();
   if (!name)                          return 'Informe seu nome completo';
   if (!email || !email.includes('@')) return 'Informe um e-mail válido';
   if (cpfCnpj.length < 11)            return 'Informe um CPF válido';
+  if (!phone || phone.length < 10)    return 'Informe seu telefone com DDD';
   if (currentTab === 'card') {
     if (document.getElementById('card-number').value.replace(/\s/g, '').length < 13) return 'Número de cartão inválido';
     if (document.getElementById('card-exp').value.length < 5)  return 'Data de validade inválida';
@@ -717,12 +729,12 @@ async function handlePay() {
   showError('');
   setLoading(true);
 
-  const { name, email, cpfCnpj } = getCustomer();
+  const { name, email, cpfCnpj, phone } = getCustomer();
   const exp = document.getElementById('card-exp').value.split('/');
 
   try {
     const result = await callBackend({
-      name, email, cpfCnpj,
+      name, email, cpfCnpj, phone,
       billingType: 'CREDIT_CARD',
       installmentCount: parseInt(document.getElementById('installments').value),
       creditCard: {
@@ -759,7 +771,7 @@ async function triggerPix() {
   document.getElementById('pix-loading').style.display = 'flex';
 
   try {
-    const result = await callBackend({ name, email, cpfCnpj, billingType: 'PIX' });
+    const result = await callBackend({ name, email, cpfCnpj, phone, billingType: 'PIX' });
 
     if (result.pixQrCode?.encodedImage) {
       document.getElementById('pix-qr-box').innerHTML =
