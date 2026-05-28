@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vaga Garantida · Mentoria Tráfego & Liberdade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --gold: #C4A882; --gold-light: #D9C4A0; --gold-bright: #B8924A;
+    --rose: #C4929A; --rose-light: #D4AEB4;
+    --nude-light: #F4EDE8; --nude-dark: #8A7A6E;
+    --bg: #1A1210; --glass-bg: rgba(255,248,244,0.04);
+    --glass-border: rgba(196,168,130,0.18);
+    --text-primary: #F4EDE8; --text-muted: rgba(244,237,232,0.55);
+    --success: #5FAD8E;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg); color: var(--text-primary);
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  .bg-wrap { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .bg-wrap::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 55% at 5% 0%, rgba(196,146,154,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 45% at 95% 95%, rgba(196,168,130,0.1) 0%, transparent 55%);
+  }
+  .card {
+    position: relative; z-index: 1;
+    max-width: 480px; width: 100%;
+    background: var(--glass-bg); border: 1px solid rgba(196,168,130,0.2);
+    border-radius: 24px; padding: 3rem 2.5rem; text-align: center;
+    backdrop-filter: blur(20px);
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196,146,154,0.55), rgba(196,168,130,0.4), transparent);
+  }
+  .icon {
+    width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 2rem;
+    background: linear-gradient(135deg, rgba(95,173,142,0.2), rgba(95,173,142,0.08));
+    border: 1px solid rgba(95,173,142,0.35);
+    display: flex; align-items: center; justify-content: center;
+    animation: popIn .5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+  @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .icon svg { color: var(--success); width: 36px; height: 36px; }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; font-weight: 600; color: var(--nude-light);
+    margin-bottom: .5rem; line-height: 1.2;
+  }
+  h1 em { font-style: italic; color: var(--gold-light); }
+  p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem; }
+  .steps {
+    list-style: none; text-align: left;
+    background: rgba(255,248,244,0.03); border: 1px solid var(--glass-border);
+    border-radius: 14px; padding: 1.5rem; margin-bottom: 2rem;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .steps li { display: flex; gap: 12px; align-items: flex-start; font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
+  .steps li .num {
+    flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--rose), var(--gold-bright));
+    color: #fff; font-size: 0.7rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .steps li strong { color: var(--nude-light); }
+  .footer-note { font-size: 0.72rem; color: var(--text-muted); opacity: .6; }
+</style>
+</head>
+<body>
+<div class="bg-wrap"></div>
+<div class="card">
+  <div class="icon">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h1>Vaga <em>garantida!</em></h1>
+  <p>Seja bem-vinda à sua nova fase.<br>Seu pagamento foi confirmado com sucesso.</p>
+  <ul class="steps">
+    <li>
+      <span class="num">1</span>
+      <span><strong>Verifique seu e-mail</strong> — você receberá em instantes a confirmação com todos os detalhes da sua mentoria.</span>
+    </li>
+    <li>
+      <span class="num">2</span>
+      <span><strong>Aguarde o contato</strong> — Kethelen entrará em contato em até 24h para agendar sua primeira sessão.</span>
+    </li>
+    <li>
+      <span class="num">3</span>
+      <span><strong>Prepare-se</strong> — sua jornada rumo aos R$&nbsp;10.000/mês começa agora.</span>
+    </li>
+  </ul>
+  <p class="footer-note">Mentoria Tráfego &amp; Liberdade · Todos os direitos reservados</p>
+</div>
+</body>
+</html>
