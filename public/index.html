@@ -500,6 +500,20 @@
           <input type="text" id="cep" placeholder="00000-000" maxlength="9" inputmode="numeric" autocomplete="postal-code" />
         </div>
       </div>
+      <div class="field">
+        <label>Endereço</label>
+        <input type="text" id="address" placeholder="Rua, Avenida..." autocomplete="street-address" />
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Número</label>
+          <input type="text" id="address-number" placeholder="123" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label>Bairro</label>
+          <input type="text" id="neighborhood" placeholder="Seu bairro" />
+        </div>
+      </div>
 
       <div class="divider-line"></div>
 
@@ -700,21 +714,27 @@ function setLoading(state) {
 
 function getCustomer() {
   return {
-    name:    document.getElementById('name').value.trim(),
-    email:   document.getElementById('email').value.trim(),
-    cpfCnpj: document.getElementById('cpf').value.replace(/\D/g, ''),
-    phone:   document.getElementById('phone').value.replace(/\D/g, ''),
-    cep:     document.getElementById('cep').value.replace(/\D/g, '')
+    name:            document.getElementById('name').value.trim(),
+    email:           document.getElementById('email').value.trim(),
+    cpfCnpj:         document.getElementById('cpf').value.replace(/\D/g, ''),
+    phone:           document.getElementById('phone').value.replace(/\D/g, ''),
+    cep:             document.getElementById('cep').value.replace(/\D/g, ''),
+    address:         document.getElementById('address').value.trim(),
+    addressNumber:   document.getElementById('address-number').value.trim(),
+    neighborhood:    document.getElementById('neighborhood').value.trim()
   };
 }
 
 function validate() {
-  const { name, email, cpfCnpj, phone, cep } = getCustomer();
+  const { name, email, cpfCnpj, phone, cep, address, addressNumber, neighborhood } = getCustomer();
   if (!name)                          return 'Informe seu nome completo';
   if (!email || !email.includes('@')) return 'Informe um e-mail válido';
   if (cpfCnpj.length < 11)            return 'Informe um CPF válido';
   if (!phone || phone.length < 10)    return 'Informe seu telefone com DDD';
   if (!cep || cep.length < 8)         return 'Informe um CEP válido';
+  if (!address)                        return 'Informe seu endereço';
+  if (!addressNumber)                  return 'Informe o número do endereço';
+  if (!neighborhood)                   return 'Informe seu bairro';
   if (currentTab === 'card') {
     if (document.getElementById('card-number').value.replace(/\s/g, '').length < 13) return 'Número de cartão inválido';
     if (document.getElementById('card-exp').value.length < 5)  return 'Data de validade inválida';
@@ -742,12 +762,12 @@ async function handlePay() {
   showError('');
   setLoading(true);
 
-  const { name, email, cpfCnpj, phone, cep } = getCustomer();
+  const { name, email, cpfCnpj, phone, cep, address, addressNumber, neighborhood } = getCustomer();
   const exp = document.getElementById('card-exp').value.split('/');
 
   try {
     const result = await callBackend({
-      name, email, cpfCnpj, phone, cep,
+      name, email, cpfCnpj, phone, cep, address, addressNumber, neighborhood,
       billingType: 'CREDIT_CARD',
       installmentCount: parseInt(document.getElementById('installments').value),
       creditCard: {
@@ -784,7 +804,7 @@ async function triggerPix() {
   document.getElementById('pix-loading').style.display = 'flex';
 
   try {
-    const result = await callBackend({ name, email, cpfCnpj, phone, cep, billingType: 'PIX' });
+    const result = await callBackend({ name, email, cpfCnpj, phone, cep, address, addressNumber, neighborhood, billingType: 'PIX' });
 
     if (result.pixQrCode?.encodedImage) {
       document.getElementById('pix-qr-box').innerHTML =
