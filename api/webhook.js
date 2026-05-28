@@ -8,6 +8,15 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
+  // Valida o token de autenticação enviado pelo Asaas
+  const tokenRecebido = req.headers['asaas-access-token'] || req.body?.token;
+  const tokenEsperado = process.env.WEBHOOK_TOKEN;
+
+  if (!tokenEsperado || tokenRecebido !== tokenEsperado) {
+    console.warn('Webhook rejeitado: token inválido');
+    return res.status(401).json({ error: 'Token inválido' });
+  }
+
   const event = req.body;
 
   console.log('Webhook recebido:', JSON.stringify(event, null, 2));
