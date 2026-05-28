@@ -2,5 +2,5 @@
   "name": "mentoria-checkout",
   "version": "1.0.0",
   "description": "Checkout seguro — Mentoria Tráfego & Liberdade",
-  "engines": { "node": "18.x" }
+  "engines": { "node": ">=24" }
 }
